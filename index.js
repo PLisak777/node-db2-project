@@ -66,3 +66,22 @@ server.put('/api/cars/:id', async (req, res) => {
 		});
 	}
 });
+
+server.delete('/api/cars/:id', async (req, res) => {
+	try {
+		const { id } = req.params;
+		const count = await db('cars').truncate().where({ id });
+		if (count > 0) {
+			res.status(204).end();
+		} else {
+			res.status(404).json({
+				message: 'That id does not exist',
+			});
+		}
+	} catch (err) {
+		res.status(500).json({
+			message: 'Something went wrong',
+			error: err,
+		});
+	}
+});
